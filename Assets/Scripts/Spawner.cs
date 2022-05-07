@@ -1,18 +1,33 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private GameObject sferaPrefab;
+    [SerializeField] private float respawnTime = 2f;
+
+    private float currentRespawnTime;
+
+    private void Start()
     {
-        
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (currentRespawnTime > 0)
+        {
+            currentRespawnTime -= Time.deltaTime;
+        }
+        else
+        {
+            SpawnSfere();
+            currentRespawnTime = respawnTime;
+        }
+    }
+
+    private void SpawnSfere()
+    {
+        GameObject a = Instantiate(sferaPrefab, transform.position, transform.rotation);
     }
 }
