@@ -1,8 +1,21 @@
+using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CollisionHandler : MonoBehaviour
 {
-    void OnCollisionEnter(Collision other)
+    [SerializeField] private float levelLoadDelay = 2f;
+    [SerializeField] private AudioClip success;
+    [SerializeField] private AudioClip crash;
+
+    private AudioSource _audioSource;
+
+    void Start()
+    {
+        _audioSource = GetComponent<AudioSource>();
+    }
+
+    private void OnCollisionEnter(Collision other)
     {
         switch (other.gameObject.tag)
         {
@@ -10,11 +23,31 @@ public class CollisionHandler : MonoBehaviour
                 Debug.Log("This thing is friendly");
                 break;
             case "Finish":
-                Debug.Log("this thing is the finish");
+                StartSuccessSequence();
                 break;
             default:
-                Debug.Log("sorry, u blew up");
+                StartCrashSequence();
                 break;
         }
+    }
+
+    private void StartSuccessSequence()
+    {
+        _audioSource.PlayOneShot(success);
+        GetComponent<Movement>().enabled = false;
+        Invoke(nameof(ReloadLevel), levelLoadDelay);
+    }
+
+    private void StartCrashSequence()
+    {
+        _audioSource.PlayOneShot(crash);
+        GetComponent<Movement>().enabled = false;
+        Invoke(nameof(ReloadLevel), levelLoadDelay);
+    }
+
+    private void ReloadLevel()
+    {
+        var currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentSceneIndex);
     }
 }
