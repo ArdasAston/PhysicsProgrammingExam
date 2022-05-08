@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -7,27 +5,25 @@ public class Spawner : MonoBehaviour
     [SerializeField] private GameObject sferaPrefab;
     [SerializeField] private float respawnTime = 2f;
 
-    private float currentRespawnTime;
-
-    private void Start()
-    {
-    }
+    private float _currentRespawnTime;
+    private float _xPos;
 
     private void Update()
     {
-        if (currentRespawnTime > 0)
+        if (_currentRespawnTime > 0)
         {
-            currentRespawnTime -= Time.deltaTime;
+            _currentRespawnTime -= Time.deltaTime;
         }
         else
         {
             SpawnSfere();
-            currentRespawnTime = respawnTime;
+            _currentRespawnTime = respawnTime;
         }
     }
 
     private void SpawnSfere()
     {
-        GameObject a = Instantiate(sferaPrefab, transform.position, transform.rotation);
+        _xPos = Random.Range(-20f, 20f);
+        GameObject a = Instantiate(sferaPrefab, new Vector3(_xPos, transform.position.y), transform.rotation);
     }
 }
